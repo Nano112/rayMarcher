@@ -60,6 +60,7 @@ public class Scene {
         for ( int i = 0; i < this.objects.size(); ++i)
         {
             double objectDistance = this.objects.get(i).distance(position);
+            //System.out.println(objectDistance);
             if (distInf.getDistance() > objectDistance)
             {
                 distInf.setDistance(objectDistance);
@@ -76,17 +77,17 @@ public class Scene {
         return Vector3.dot(lightVector, getNormal(p,epsilon));
     }
 
-    public Image renderScene(int width, int height,Vector3 cameraPos, double fov, double epsilon)
+    public Image renderScene(int width, int height,Vector3 cameraPos, double fov,int maxSteps, double epsilon)
     {
 
         long start = System.currentTimeMillis();
-        fov = (double) (fov * Math.PI / 180);
+        fov = fov * Math.PI / 180;
         Image image = new Image(width, height);
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
-                Vector3 direction = new Vector3(x - width / 2f, y - height / 2f, -width / (2 * (double)Math.tan(fov / 2))).normalize();
+                Vector3 direction = new Vector3(x - width / 2f, y - height / 2f, -width / (2 * Math.tan(fov / 2))).normalize();
                 Ray ray = new Ray(new Vector3(0, 0 ,0), direction );
-                DistanceInformation di = marchRay(cameraPos,direction,30,epsilon);
+                DistanceInformation di = marchRay(cameraPos,direction,maxSteps,epsilon);
                 Vector3 position = Vector3.add(cameraPos,Vector3.mul(direction,di.getDistance()));
                 if(di.getDistance() != Double.MAX_VALUE)
                 {

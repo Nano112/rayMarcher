@@ -6,7 +6,7 @@ public class DistanceInformation {
 
     public DistanceInformation()
     {
-        this.distance = Double.MAX_VALUE;;
+        this.distance = Double.MAX_VALUE;
         this.objectID = -1;
     }
 

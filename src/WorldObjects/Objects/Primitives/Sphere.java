@@ -1,6 +1,7 @@
-package WorldObjects.Objects;
+package WorldObjects.Objects.Primitives;
 
 import MyMath.Vector.Vector3;
+import WorldObjects.Objects.WorldObject;
 
 public class Sphere extends WorldObject
 {

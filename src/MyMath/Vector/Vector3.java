@@ -29,6 +29,35 @@ public class Vector3
         return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
     }
 
+    public static double dist(Vector3 a)
+    {
+        return Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z);
+    }
+
+    public static Vector3 abs(Vector3 a)
+    {
+        double x = Math.abs(a.x);
+        double y = Math.abs(a.y);
+        double z = Math.abs(a.z);
+        return new Vector3(x, y, z);
+    }
+
+    public static Vector3 max(Vector3 a, double b)
+    {
+        double x = Math.max(a.x,b);
+        double y = Math.max(a.y,b);
+        double z = Math.max(a.z,b);
+        return new Vector3(x, y, z);
+    }
+
+    public static Vector3 min(Vector3 a, double b)
+    {
+        double x = Math.min(a.x,b);
+        double y = Math.min(a.y,b);
+        double z = Math.min(a.z,b);
+        return new Vector3(x, y, z);
+    }
+
     public static Vector3 add(Vector3 a, Vector3 b)
     {
         double x = a.x + b.x;
