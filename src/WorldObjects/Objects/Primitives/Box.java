@@ -20,7 +20,8 @@ public class Box extends WorldObject
     @Override
     public double distance(Vector3 p)
     {
-        Vector3 d = Vector3.abs(p).sub(this.dimensions);
+        Vector3 position = Vector3.sub(super.position,p);
+        Vector3 d = Vector3.abs(position).sub(this.dimensions);
         return Vector3.dist(Vector3.max(d,0.0))
                 //+ min(max(d.getX(),max(d.getY(),d.getZ())),0.0)
           ;

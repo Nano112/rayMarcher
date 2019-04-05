@@ -92,7 +92,7 @@ public class Scene {
                 if(di.getDistance() != Double.MAX_VALUE)
                 {
                     Color color;
-                    if(false) {//Print Normal Map
+                    if(true) {//Print Normal Map
                         Vector3 normal = getNormal(position, epsilon);
                         normal = normal.add(1.0);
                         normal = normal.div(2);
