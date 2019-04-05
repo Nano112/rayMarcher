@@ -1,10 +1,7 @@
 import Graphics.Image;
 import MyMath.Vector.Vector3;
 import WorldObjects.LightSource;
-import WorldObjects.Objects.Primitives.Box;
-import WorldObjects.Objects.Primitives.CombinedObjects;
-import WorldObjects.Objects.Primitives.Plane;
-import WorldObjects.Objects.Primitives.Sphere;
+import WorldObjects.Objects.Primitives.*;
 import WorldObjects.Objects.WorldObject;
 
 import java.io.IOException;
@@ -19,7 +16,7 @@ public class Main {
 
                 Scene scene = setUpScene();
                 long start = System.currentTimeMillis();
-                Image image = scene.renderScene(300, 300, new Vector3(0, 15, 0), 60, 300, 0.01);
+                Image image = scene.renderScene(1920, 1080, new Vector3(0, 15, 0), 60, 2000, 0.001);
                 long end = System.currentTimeMillis();
                 System.out.println("Frame took " + (end - start) + "ms");
                 image.save("frame_");
@@ -36,12 +33,7 @@ public class Main {
 
             shapes.add(new Plane(new Vector3(0,-20,-80), new Vector3(0,-1,0) ));
             shapes.add(new Plane(new Vector3(0,100,-80), new Vector3(0,1,0) ));
-            WorldObject o1 = new Box(new Vector3(0,0,-40), new Vector3(10,10,10) );
-            WorldObject o2 = new Sphere(new Vector3(0,15,-40), 10 );
-            WorldObject o3 = new CombinedObjects(o1,o2,0.5,false,false,false);
-            WorldObject o4 = new Sphere(new Vector3(10,15,-40), 10 );
-            WorldObject o5 = new CombinedObjects(o3,o4,0.5,false,false,false);
-
+            WorldObject o1 = new Mandelbulb(new Vector3(0,0,-80),100,)
             shapes.add(o5);
 
             Scene scene = new Scene(shapes, light);
