@@ -9,13 +9,16 @@ public class Sphere extends WorldObject
 
     public Sphere(Vector3 position, double r)
     {
-        super.position= position;
+        super.position = position;
         this.radius = r;
     }
 
     @Override
-    public double distance(Vector3 p) {
-        return super.position.sub(p).dist() - this.radius;
+    public double distance(Vector3 p)
+    {
+
+        double dist = super.position.sub(p).dist() - this.radius;
+        return dist;
     }
 
     public double getRadius() {

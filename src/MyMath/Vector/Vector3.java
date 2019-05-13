@@ -165,9 +165,9 @@ public class Vector3
 
     public static Vector3 mod(Vector3 a, double b)
     {
-        double x = a.x % b;
-        double y = a.y % b;
-        double z = a.z % b;
+        double x = a.getX() % b;
+        double y = a.getY() % b;
+        double z = a.getZ() % b;
         return new Vector3(x, y, z);
     }
 
@@ -225,7 +225,7 @@ public class Vector3
 
     public double getX()
     {
-        return x;
+        return this.x;
     }
 
     public void setX(double x)
@@ -235,7 +235,7 @@ public class Vector3
 
     public double getY()
     {
-        return y;
+        return this.y;
     }
 
     public void setY(double y)
@@ -245,7 +245,7 @@ public class Vector3
 
     public double getZ()
     {
-        return z;
+        return this.z;
     }
 
     public void setZ(double z)

@@ -1,6 +1,7 @@
 import Graphics.Color;
 import Graphics.Image;
 import MyMath.DistanceInformation;
+import MyMath.MyMath;
 import MyMath.Ray;
 import MyMath.Vector.Vector3;
 import WorldObjects.LightSource;
@@ -34,22 +35,32 @@ public class Scene {
     public DistanceInformation marchRay(Vector3 cameraPosition, Vector3 viewDirection ,int maxStepNumber, double epislon)
     {
         double depth = 0;
+        DistanceInformation distInf = new DistanceInformation();
+        double minDist = Double.MAX_VALUE;
         for (int i = 0; i < maxStepNumber; ++ i)
         {
-            DistanceInformation distInf = getSceneDist(Vector3.add(cameraPosition, Vector3.mul(viewDirection, depth)));
+            distInf = getSceneDist(Vector3.add(cameraPosition, Vector3.mul(viewDirection, depth)));
+            if ( distInf.getDistance() < minDist)
+                minDist = distInf.getDistance();
+
 
             if( distInf.getDistance() < epislon)
             {
                 distInf.setDistance(depth);
-                return distInf;
+                distInf.setSteps(i);
+                break;
             }
+
             depth += distInf.getDistance();
+
             if(distInf.getObjectID() == -1)
             {
-                return new DistanceInformation();
+                 distInf.setDistance(Double.MAX_VALUE);
+                 break;
             }
         }
-        return new DistanceInformation();
+        distInf.setMinDist(minDist);
+        return distInf;
     }
 
 
@@ -57,10 +68,10 @@ public class Scene {
     public DistanceInformation getSceneDist(Vector3 position)
     {
         DistanceInformation distInf = new DistanceInformation();
+        double objectDistance;
         for ( int i = 0; i < this.objects.size(); ++i)
         {
-            double objectDistance = this.objects.get(i).distance(position);
-            //System.out.println(objectDistance);
+             objectDistance = this.objects.get(i).distance(position);
             if (distInf.getDistance() > objectDistance)
             {
                 distInf.setDistance(objectDistance);
@@ -83,33 +94,52 @@ public class Scene {
         long start = System.currentTimeMillis();
         fov = fov * Math.PI / 180;
         Image image = new Image(width, height);
+        Ray ray = new Ray(new Vector3(0, 0 ,0), new Vector3(0,0,0) );
+        Vector3 direction = new Vector3(0 - (width >>1), 0 - (height >> 1), -width / (Math.tan(fov /2) *2)).normalize();
+        double zTan =   1/(Math.tan(fov /2) *2);
         for (int x = 0; x < width; ++x) {
+            System.out.println(x);
             for (int y = 0; y < height; ++y) {
-                Vector3 direction = new Vector3(x - width / 2f, y - height / 2f, -width / (2 * Math.tan(fov / 2))).normalize();
-                Ray ray = new Ray(new Vector3(0, 0 ,0), direction );
+                direction.setX(x - (width >>1));
+                direction.setY(y - (height >> 1));
+                direction.setZ(-width * zTan);
+                direction = direction.normalize();
+                ray.setPosition(cameraPos);
+                ray.setDirection(direction);
                 DistanceInformation di = marchRay(cameraPos,direction,maxSteps,epsilon);
                 Vector3 position = Vector3.add(cameraPos,Vector3.mul(direction,di.getDistance()));
+
+                Color color = new Color(0,0,0);
                 if(di.getDistance() != Double.MAX_VALUE)
                 {
-                    Color color;
-                    if(true) {//Print Normal Map
+                    if(false) {//Print Normal Map
                         Vector3 normal = getNormal(position, epsilon);
                         normal = normal.add(1.0);
                         normal = normal.div(2);
-                        color = new Color((int) (255 * normal.getX()), (int) (255 * normal.getY()), (int) (255 * normal.getZ()));
+                        color.setR((int) (255 * normal.getX()));
+                        color.setG((int) (255 * normal.getY()));
+                        color.setB((int) (255 * normal.getZ()));
                     }
-                    else
+                    else if(true)
                     {
                         double intensity = getShade(position,epsilon);
                         if(intensity < 0)
                         {
                             intensity = 0;
                         }
-                        color = new Color((int)(255 * intensity),(int)(255 * intensity),(int)(255 * intensity));
+                        color.setR((int) (255 * intensity));
+                        color.setG((int) (255 * intensity));
+                        color.setB((int) (255 * intensity));
                     }
-                    image.setPixel(x, height-y-1,color );
                 }
 
+                if(di.getMinDist() < 25.5 && false)
+                {
+                    color.setR((int)MyMath.clamp(color.getR()*(255-(di.getMinDist()*10)),0,255));
+                    color.setG((int)MyMath.clamp(color.getG()+0,0,255));
+                    color.setB((int)MyMath.clamp(color.getB()+0,0,255));
+                }
+                image.setPixel(x, height-y-1,color );
             }
         }
         return image;
