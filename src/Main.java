@@ -13,12 +13,16 @@ import static MyMath.OpenSimplexNoise.SimplexNoise.noise;
 public class Main {
  public static void main(String[] args) throws IOException
         {
-                Scene scene = setUpScene(0);
+            for (int i = 0 ; i < 360 ; ++ i)
+            {
+                Scene scene = setUpScene(i/360.0*Math.PI);
                 long start = System.currentTimeMillis();
-                Image image = scene.renderScene(400, 400, new Vector3(0, 15, 0), 60, 2000, 0.1);
+                Image image = scene.renderScene(400, 400, new Vector3(0, 15, 0), 60, 20, 0.1);
                 long end = System.currentTimeMillis();
                 System.out.println("Frame took " + (end - start) + "ms");
-                image.save("frame_" + 0);
+                image.save("frame_" + i);
+            }
+
         }
 
         public static double getNoise(Vector3 p, Double amplitude,Double freq)
@@ -39,7 +43,7 @@ public class Main {
             LightSource light = new LightSource(new Vector3(0,20,-100),10000000);
             //shapes.add(new Plane(new Vector3(0,100,0), new Vector3(0,1,0) ));
             WorldObject o =new Sphere(new Vector3(0,0,-300), 100 );
-            WorldObject o1 = new DisplacedObject(o, (p) -> getNoise(p, 30.0, 300.0));
+            WorldObject o1 = new DisplacedObject(o, (p) -> 0);
             shapes.add(o1);
             //shapes.add(o3);
             //shapes.add(new CombinedObjects(o2, o3,0.2,false,false,false));

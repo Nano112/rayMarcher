@@ -98,7 +98,7 @@ public class Scene {
         Vector3 direction = new Vector3(0 - (width >>1), 0 - (height >> 1), -width / (Math.tan(fov /2) *2)).normalize();
         double zTan =   1/(Math.tan(fov /2) *2);
         for (int x = 0; x < width; ++x) {
-            System.out.println(x);
+            //System.out.println(x);
             for (int y = 0; y < height; ++y) {
                 direction.setX(x - (width >>1));
                 direction.setY(y - (height >> 1));
