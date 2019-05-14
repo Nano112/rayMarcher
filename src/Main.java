@@ -11,46 +11,36 @@ import java.util.List;
 import static MyMath.OpenSimplexNoise.SimplexNoise.noise;
 
 public class Main {
-
-
-        public static void main(String[] args) throws IOException
+ public static void main(String[] args) throws IOException
         {
-            for (int i=0;i<360;++i)
-            {
-                Scene scene = setUpScene(i);
+                Scene scene = setUpScene(0);
                 long start = System.currentTimeMillis();
-                Image image = scene.renderScene(300, 300, new Vector3(0, 15, 0), 60, 200, 0.01);
+                Image image = scene.renderScene(400, 400, new Vector3(0, 15, 0), 60, 2000, 0.1);
                 long end = System.currentTimeMillis();
                 System.out.println("Frame took " + (end - start) + "ms");
-                image.save("frame_" + i);
-            }
-
-
-
+                image.save("frame_" + 0);
         }
 
-        public static double getNoise(Vector3 p, Double time, Double amplitude,Double freq)
+        public static double getNoise(Vector3 p, Double amplitude,Double freq)
         {
             Double sum = 0.0;
-
-            sum += noise(p.getX()/freq,p.getY()/freq, p.getZ()/freq , time/freq)*amplitude;
-            sum += noise(p.getX()/freq*2,p.getY()/freq*2,p.getZ()/freq*2,time/freq*2)*amplitude/2;
-            sum += noise(p.getX()/freq*4,p.getY()/freq*4, p.getZ()/freq*4, time/freq*4)*amplitude/4;
-            sum += noise(p.getX()/freq*8,p.getY()/freq*8, p.getZ()/freq*8, time/freq*8)*amplitude/8;
+            for (int i = 0 ; i < 8 ; ++i)
+            {
+                sum += noise(p.getX()/freq*Math.pow(2,i),p.getY()/freq*Math.pow(2,i),p.getZ()/freq*Math.pow(2,i))*amplitude/Math.pow(2,i);
+            }
             return sum;
         }
+
 
 
         public static Scene setUpScene(double t)
         {
             List<WorldObject> shapes = new ArrayList<>();
-            LightSource light = new LightSource(new Vector3(0,100,-100),10000000);
+            LightSource light = new LightSource(new Vector3(0,20,-100),10000000);
             //shapes.add(new Plane(new Vector3(0,100,0), new Vector3(0,1,0) ));
-            WorldObject o =new Plane(new Vector3(0,-100,0), new Vector3(0,-1,0) );
-            //shapes.add(o);
-            WorldObject o1 = new Sphere(new Vector3(0,10,-300),60);
-            WorldObject o2 = new DisplacedObject(o1, (p) -> getNoise(p, t,12.0, 70.0));
-            shapes.add(o2);
+            WorldObject o =new Sphere(new Vector3(0,0,-300), 100 );
+            WorldObject o1 = new DisplacedObject(o, (p) -> getNoise(p, 30.0, 300.0));
+            shapes.add(o1);
             //shapes.add(o3);
             //shapes.add(new CombinedObjects(o2, o3,0.2,false,false,false));
             //shapes.add(new Plane(new Vector3(-100,0,0), new Vector3(-1,0,0) ));
