@@ -27,7 +27,7 @@ public class Scene {
         return Vector3.normalize(new Vector3(
                 getSceneDist(new Vector3(p.getX()+epsilon,p.getY(),p.getZ())).getDistance() - getSceneDist(new Vector3(p.getX()-epsilon,p.getY(),p.getZ())).getDistance(),
                 getSceneDist(new Vector3(p.getX(),p.getY()+epsilon,p.getZ())).getDistance() - getSceneDist(new Vector3(p.getX(),p.getY()-epsilon,p.getZ())).getDistance(),
-                getSceneDist(new Vector3(p.getX(),p.getY(),p.getZ()+epsilon)).getDistance() - getSceneDist(new Vector3(p.getX(),p.getY(),p.getZ()-epsilon)).getDistance())
+                getSceneDist(new Vector3(p.getX(),p.getY(),p.getZ() + epsilon)).getDistance() - getSceneDist(new Vector3(p.getX(),p.getY(),p.getZ()-epsilon)).getDistance())
         );
     }
 
@@ -112,7 +112,7 @@ public class Scene {
                 Color color = new Color(0,0,0);
                 if(di.getDistance() != Double.MAX_VALUE)
                 {
-                    if(false) {//Print Normal Map
+                    if(true) {//Print Normal Map
                         Vector3 normal = getNormal(position, epsilon);
                         normal = normal.add(1.0);
                         normal = normal.div(2);
