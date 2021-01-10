@@ -18,7 +18,8 @@ The current setup is configured to render 360 scenes with a time variable here i
 using open simplex noise displacement to a sphere:
     
      WorldObject s1 = new Sphere(new Vector3(0,0,-60),20);
-     WorldObject o1 = new DisplacedObject(s1,(p) -> getNoise(new Vector4(p.getX(),p.getY(),p.getZ(), t*30), 5.0, 20.0));
+     Vector4 noisePosition = new Vector4(p.getX(),p.getY(),p.getZ(), t*30);
+     WorldObject o1 = new DisplacedObject(s1,(p) -> getNoise(noisePosition, 5.0, 20.0));
 
 Which yields:
 
