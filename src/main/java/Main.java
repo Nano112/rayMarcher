@@ -2,6 +2,7 @@ import Graphics.Image;
 import MyMath.OpenSimplexNoise.FastNoise;
 import MyMath.OpenSimplexNoise.Noise;
 import MyMath.Vector.Vector3;
+import MyMath.Vector.Vector4;
 import WorldObjects.LightSource;
 import WorldObjects.Objects.Primitives.*;
 import WorldObjects.Objects.WorldObject;
@@ -30,12 +31,24 @@ public class Main {
 
         }
 
+
+        //The noise functions are very expensive to compute
         public static double getNoise(Vector3 p, Double amplitude,Double freq)
         {
             Double sum = 0.0;
-            for (int i = 0 ; i < 8 ; ++i)
+            for (int i = 0 ; i < 3 ; ++i)
             {
                 sum += noise(p.getX()/freq*Math.pow(2,i),p.getY()/freq*Math.pow(2,i),p.getZ()/freq*Math.pow(2,i))*amplitude/Math.pow(2,i);
+            }
+            return sum;
+        }
+
+        public static double getNoise(Vector4 p, Double amplitude, Double freq)
+        {
+            Double sum = 0.0;
+            for (int i = 0 ; i < 3 ; ++i)
+            {
+                sum += noise(p.getX()/freq*Math.pow(2,i),p.getY()/freq*Math.pow(2,i),p.getZ()/freq*Math.pow(2,i), p.getW()/freq*Math.pow(2,i))*amplitude/Math.pow(2,i);
             }
             return sum;
         }
@@ -62,7 +75,8 @@ public class Main {
             //WorldObject o0 = new DisplacedObject(s0,(p) -> fn.GetCellular((float)p.getX()*8,(float)p.getY()*8,(float)p.getZ()*8)*5);
 
             WorldObject s1 = new Sphere(new Vector3(0,0,-60),20);
-            WorldObject o1 = new DisplacedObject(s1,(p) -> noise(p.getX()/7,p.getY()/7,p.getZ()/7,t)*5);
+            WorldObject o1 = new DisplacedObject(s1,(p) -> getNoise(new Vector4(p.getX(),p.getY(),p.getZ(), t*30), 5.0, 20.0));
+            //WorldObject o1 = new DisplacedObject(s1,(p) -> noise(p.getX()/7,p.getY()/7,p.getZ()/7,t)*5);
 
             //WorldObject c0 = new CombinedObjects(o0,o1,1,true,false,false);
             //WorldObject o1 = new Sphere(new Vector3(0,0,-100),12);
