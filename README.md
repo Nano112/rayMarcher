@@ -11,5 +11,5 @@ For example a metaball would be created using the following:
     `WorldObject o3 = new CombinedObjects(o1,o2,1,false,false,false);`
     
 And would yield the following:
-    ![alt text](https://github.com/Nano112/rayMarcher/blob/master/examples/metaball.png?raw=true)
+![alt text](https://github.com/Nano112/rayMarcher/blob/master/examples/metaball.png?raw=true)
  
