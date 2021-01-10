@@ -21,6 +21,7 @@ using open simplex noise displacement to a sphere:
      WorldObject o1 = new DisplacedObject(s1,(p) -> getNoise(new Vector4(p.getX(),p.getY(),p.getZ(), t*30), 5.0, 20.0));
 
 Which yields:
+
 ![alt text](https://github.com/Nano112/rayMarcher/blob/master/examples/noise_displacement.gif?raw=true)
            
  
