@@ -14,14 +14,18 @@ import static MyMath.OpenSimplexNoise.SimplexNoise.noise;
 public class Main {
  public static void main(String[] args) throws IOException
         {
+            FastNoise fn = new FastNoise();
+            fn.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Euclidean);
+            fn.SetCellularReturnType(FastNoise.CellularReturnType.Distance2Div);
+
             for (int i = 0 ; i < 360 ; ++ i)
             {
-                Scene scene = setUpScene(i/360.0*Math.PI);
+                Scene scene = setUpScene(fn, i/360.0*Math.PI);
                 long start = System.currentTimeMillis();
-                Image image = scene.renderScene(720, 480, new Vector3(0, 0, 0), 60, 25, 0.1);
+                Image image = scene.renderScene(480, 480, new Vector3(0, 0, 0), 60, 30, 0.01, true);
                 long end = System.currentTimeMillis();
                 System.out.println("Frame took " + (end - start) + "ms");
-                image.save("frame_" + i);
+                image.save("frame_" + String.format("%03d", i));
             }
 
         }
@@ -38,11 +42,9 @@ public class Main {
 
 
 
-        public static Scene setUpScene(double t)
+        public static Scene setUpScene(FastNoise fn, double t)
         {
-            FastNoise fn = new FastNoise();
-            fn.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Euclidean);
-            fn.SetCellularReturnType(FastNoise.CellularReturnType.Distance2Div);
+
 
             List<WorldObject> shapes = new ArrayList<>();
             LightSource light = new LightSource(new Vector3(0,20,-30),10000000);
@@ -56,16 +58,18 @@ public class Main {
             //shapes.add(new Plane(new Vector3(100,0,0), new Vector3(1,0,0) ));
             //shapes.add(new Plane(new Vector3(0,0,-2000), new Vector3(0,0,1) ));//TOO DO DE PLANE IS BROKEN
             //shapes.add(new Plane(new Vector3(0,0,100), new Vector3(0,0,1) ));
-            WorldObject s0 = new Sphere(new Vector3(0,0,-500),40);
-            WorldObject o0 = new DisplacedObject(s0,(p) -> fn.GetCellular((float)p.getX()*8,(float)p.getY()*8,(float)p.getZ()*8)*5);
-            //WorldObject s1 = new Sphere(new Vector3(20*Math.cos(Math.PI*t/180),20*Math.sin(Math.PI*t/180),-100),20);
-            //WorldObject o1 = new DisplacedObject(s1,(p) -> noise(p.getX()/10,p.getY()/10,p.getZ()/10,t/60)*5);
+            //WorldObject s0 = new Sphere(new Vector3(0,0,-500),40);
+            //WorldObject o0 = new DisplacedObject(s0,(p) -> fn.GetCellular((float)p.getX()*8,(float)p.getY()*8,(float)p.getZ()*8)*5);
+
+            WorldObject s1 = new Sphere(new Vector3(0,0,-60),20);
+            WorldObject o1 = new DisplacedObject(s1,(p) -> noise(p.getX()/7,p.getY()/7,p.getZ()/7,t)*5);
+
             //WorldObject c0 = new CombinedObjects(o0,o1,1,true,false,false);
             //WorldObject o1 = new Sphere(new Vector3(0,0,-100),12);
             //WorldObject o2 = new Sphere(new Vector3(0,16,-100),8);
             //WorldObject o3 = new CombinedObjects(o1,o2,1,false,false,false);
             //WorldObject o4 = new CombinedObjects(o0,o3,1,false,false,false);
-            shapes.add(o0);
+            shapes.add(o1);
             Scene scene = new Scene(shapes, light);
             return scene;
         }

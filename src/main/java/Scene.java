@@ -88,17 +88,14 @@ public class Scene {
         return Vector3.dot(lightVector, getNormal(p,epsilon));
     }
 
-    public Image renderScene(int width, int height,Vector3 cameraPos, double fov,int maxSteps, double epsilon)
+    public Image renderScene(int width, int height,Vector3 cameraPos, double fov,int maxSteps, double epsilon, boolean normalMap)
     {
-
-        long start = System.currentTimeMillis();
-        fov = fov * Math.PI / 180;
+        fov = fov * Math.PI / 180; // FOV normalisation
         Image image = new Image(width, height);
         Ray ray = new Ray(new Vector3(0, 0 ,0), new Vector3(0,0,0) );
         Vector3 direction = new Vector3(0 - (width >>1), 0 - (height >> 1), -width / (Math.tan(fov /2) *2)).normalize();
         double zTan =   1/(Math.tan(fov /2) *2);
         for (int x = 0; x < width; ++x) {
-            //System.out.println(x);
             for (int y = 0; y < height; ++y) {
                 direction.setX(x - (width >>1));
                 direction.setY(y - (height >> 1));
@@ -110,9 +107,9 @@ public class Scene {
                 Vector3 position = Vector3.add(cameraPos,Vector3.mul(direction,di.getDistance()));
 
                 Color color = new Color(0,0,0);
-                if(di.getDistance() != Double.MAX_VALUE)
+                if(di.getDistance() < 1000) //Set maximum marching distance
                 {
-                    if(true) {//Print Normal Map
+                    if(normalMap) {//Print Normal Map
                         Vector3 normal = getNormal(position, epsilon);
                         normal = normal.add(1.0);
                         normal = normal.div(2);
@@ -120,10 +117,10 @@ public class Scene {
                         color.setG((int) (255 * normal.getY()));
                         color.setB((int) (255 * normal.getZ()));
                     }
-                    else if(true)
+                    else
                     {
                         double intensity = getShade(position,epsilon);
-                        if(intensity < 0)
+                        if(intensity <= 0)
                         {
                             intensity = 0;
                         }
@@ -131,13 +128,6 @@ public class Scene {
                         color.setG((int) (255 * intensity));
                         color.setB((int) (255 * intensity));
                     }
-                }
-
-                if(di.getMinDist() < 25.5 && false)
-                {
-                    color.setR((int)MyMath.clamp(color.getR()*(255-(di.getMinDist()*10)),0,255));
-                    color.setG((int)MyMath.clamp(color.getG()+0,0,255));
-                    color.setB((int)MyMath.clamp(color.getB()+0,0,255));
                 }
                 image.setPixel(x, height-y-1,color );
             }
